@@ -5,8 +5,22 @@
 #include <iostream>
 #include <string>
 
-int main()
-{
-    std::cout << "Hello World!\n";
+int main() {
+    // Read passwords from password.txt
+
+    // for each password
+
+        // check length
+
+        // check character requirements
+
+        // check substrings for common names
+
+        // check substrings for common sequences
+
+        // check substrings for previously breached passwords
+
+        // output classification
+
 }
 
