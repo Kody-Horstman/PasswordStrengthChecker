@@ -22,8 +22,8 @@ int main() {
     // Constant filenames
     const std::string PWD_FILE = "password.txt";
     const std::string NAM_FILE = ""; // Common names
-    const std::string SUB_FILE = ""; // Common substrings
-    const std::string BPW_FILE = ""; // Previously breached passwords
+    const std::string SUB_FILE = "keyboard-combinations.txt"; // Common substrings
+    const std::string BPW_FILE = "10000-common-passwords.txt"; // Previously breached passwords
 
     // Variable containers
     std::vector<std::string> passwords;
@@ -33,13 +33,25 @@ int main() {
 
     // Read passwords from password.txt
     loadContents(PWD_FILE, passwords);
+    loadContents(SUB_FILE, commonSubstrings);
+    loadContents(BPW_FILE, breachedPasswords);
 
-
-    // for each password
-    std::cout << "Stored lines:" << std::endl;
+    std::cout << "Stored passwords:" << std::endl;
     for (auto pwd : passwords) {
         std::cout << pwd << std::endl;
     }
+    
+    std::cout << std::endl << "Stored keyboard combinations (first 10):" << std::endl;
+    for (int i = 0; i <= 10; i++) {
+        std::cout << commonSubstrings.at(i) << std::endl;
+    }
+    
+    std::cout << std::endl << "Stored common passwords (first 10):" << std::endl;
+    for (int i = 0; i <= 10; i++) {
+        std::cout << breachedPasswords.at(i) << std::endl;
+    }
+
+    // for each password
         
         // check length
 
