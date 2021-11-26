@@ -20,12 +20,15 @@
 #include <string>
 #include <regex>
 
-#define MIN_LEN 16 // Minimum password length
+#define TEST    0      // To run the test list I made, Make this 1
+#define DEBUG   0     // To output debug information, Make this 1
+
+#define MIN_LEN 16      // Minimum password length
 #define UC_PAT "[A-Z]"  // Pattern for uppercase characters
 #define LC_PAT "[a-z]"  // Pattern for lowercase characters
 #define DC_PAT "[0-9]"  // Pattern for digit characters
 
- // Types
+// Types
 enum class Strength { Weak, Strong };
 
 // Prototypes
@@ -33,39 +36,44 @@ void loadContentsInto(const std::string&, std::vector<std::string>&);
 bool meetsLengthRequirements(const std::string&);
 bool meetsCharacterRequirements(const std::string&);
 bool isFreeOf(const std::string&, const std::vector<std::string>&);
-//void classify(const std::vector<std::string>&, const std::vector<std::string>&, const std::vector<std::string>&, const std::vector<std::string>&);
 void classify(const std::vector<std::string>&, const std::vector<std::string>&);
 
 int main() {
     // Constants
+#if TEST
     const std::string TST_FILE = "test-pwds.txt";  // Passwords to test checker actually works as designed
+#endif
     const std::string PWD_FILE = "password.txt";
     const std::string NAM_FILE = "10000-common-names.txt"; // Common names
     const std::string KEY_FILE = "keyboard-combinations.txt"; // Common substrings
     const std::string BPW_FILE = "10000-common-passwords.txt"; // Previously breached passwords
 
     // Variable containers
+#if TEST
     std::vector<std::string> testPwds;
+#endif
     std::vector<std::string> passwords;
-    std::vector<std::string> commonNames;
-    std::vector<std::string> commonCombinations;
-    std::vector<std::string> breachedPasswords;
     std::vector<std::string> commonPatterns;
     
     // Read passwords from password.txt
+#if TEST
     loadContentsInto(TST_FILE, testPwds);
+#endif
     loadContentsInto(PWD_FILE, passwords);
-    /*loadContentsInto(NAM_FILE, commonNames);
-    loadContentsInto(KEY_FILE, commonCombinations);
-    loadContentsInto(BPW_FILE, breachedPasswords);*/
     loadContentsInto(NAM_FILE, commonPatterns);
     loadContentsInto(KEY_FILE, commonPatterns);
     loadContentsInto(BPW_FILE, commonPatterns);
 
     // Classify
-    //classify(testPwds, commonNames, commonCombinations, breachedPasswords);
-    //classify(passwords, commonNames, commonCombinations, breachedPasswords);
+#if TEST && DEBUG
+    std::cout << "Test passwords:" << std::endl;
+#endif
+#if TEST
     classify(testPwds, commonPatterns);
+#endif
+#if DEBUG
+    std::cout << "Passwords:" << std::endl;
+#endif
     classify(passwords, commonPatterns);
 }
 
@@ -75,6 +83,11 @@ int main() {
 //  @param vect
 void loadContentsInto(const std::string& FILENAME, std::vector<std::string>& vect) {
     std::string line;
+
+#if DEBUG
+    std::cout << "Loading " << FILENAME << "..." << std::endl;
+#endif
+
     // Create infile stream
     std::ifstream infile(FILENAME);
 
@@ -88,6 +101,10 @@ void loadContentsInto(const std::string& FILENAME, std::vector<std::string>& vec
         }
         infile.close();
     }
+
+#if DEBUG
+    std::cout << "Successfully loaded." << std::endl << std::endl;
+#endif
 }
 
 // meetsLengthRequirements
@@ -95,6 +112,11 @@ void loadContentsInto(const std::string& FILENAME, std::vector<std::string>& vec
 //  @param pwd
 bool meetsLengthRequirements(const std::string& pwd) {
     if (pwd.size() >= MIN_LEN) return true;
+
+#if DEBUG
+    std::cout << "\tDoes not meet length requirement." << std::endl;
+#endif
+
     return false;
 }
 
@@ -122,10 +144,16 @@ bool meetsCharacterRequirements(const std::string& pwd) {
     auto digitsEnd = std::sregex_iterator();
     digitsCount = std::distance(digitsBegin, digitsEnd);
 
+#if DEBUG
+    if (upperCount < 3) std::cout << "\tNot enough uppercase letters." << std::endl;
+    if (lowerCount < 3) std::cout << "\tNot enough lowercase letters." << std::endl;
+    if (digitsCount < 2) std::cout << "\tNot enough digits." << std::endl;
+#endif
+
     if (upperCount >= 3
         && lowerCount >= 3
         && digitsCount >= 2
-        )
+       )
         return true;
     return false;
 }
@@ -141,6 +169,9 @@ bool isFreeOf(const std::string& pwd, const std::vector<std::string>& patterns) 
         for (const auto& pat : patterns) {
             // Return false if pat appears in pwd
             if (pwd.find(pat) != std::string::npos) {
+#if DEBUG
+                std::cout << "\tContains common pattern: " << pat << std::endl;
+#endif
                 return false;
             }
         }
@@ -150,31 +181,30 @@ bool isFreeOf(const std::string& pwd, const std::vector<std::string>& patterns) 
 }
 
 // classify
-// Takes a list of passwords and 3 lists of patterns and outputs Strong or Weak depending on whether they satisfy the requirements stated at the beginning of this file.
+// Takes a list of passwords and a list of patterns and outputs Strong or Weak depending on whether they satisfy the requirements stated at the beginning of this file.
 //  @param vectPwds
-//  @param vectNames
-//  @param vectCombos
-//  @param vectCommonPwds
-//void classify(const std::vector<std::string> &vectPwds, const std::vector<std::string> &vectNames, const std::vector<std::string> &vectCombos, const std::vector<std::string> &vectCommonPwds) {
+//  @param vectPatterns
 void classify(const std::vector<std::string> &vectPwds, const std::vector<std::string> &vectPatterns) {
     static Strength strengthClass;
 
     // for each test password
     for (const auto& pwd : vectPwds) {
+#if DEBUG
         std::cout << pwd << std::endl;
+#endif
         // check requirements
         if (meetsLengthRequirements(pwd)        // Length
             && meetsCharacterRequirements(pwd)  // Character
-            //&& isFreeOf(pwd, vectNames)         // Common names
-            //&& isFreeOf(pwd, vectCombos)        // Common keyboard combinations
-            //&& isFreeOf(pwd, vectCommonPwds)    // Common passwords
-            && isFreeOf(pwd, vectPatterns)
+            && isFreeOf(pwd, vectPatterns)      // Common Patterns
            )
             strengthClass = Strength::Strong;
         else strengthClass = Strength::Weak;
 
         // output classification
         std::cout << (strengthClass == Strength::Strong ? "Strong" : "Weak") << std::endl;
+#if DEBUG
+        std::cout << std::endl;
+#endif
     }
 
     std::cout << std::endl;
