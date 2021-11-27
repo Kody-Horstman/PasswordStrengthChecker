@@ -126,7 +126,7 @@ bool meetsLengthRequirements(const std::string& pwd) {
 bool meetsCharacterRequirements(const std::string& pwd) {
     // I struggled with this part, this solution was adapted from the example at https://en.cppreference.com/w/cpp/regex.
 
-    static const std::regex upperReg(UC_PAT), lowerReg(LC_PAT), digitsReg(DC_PAT);
+    const std::regex upperReg(UC_PAT), lowerReg(LC_PAT), digitsReg(DC_PAT);
     int upperCount = 0, lowerCount = 0, digitsCount = 0;
 
     // Uppercase characters
