@@ -13,12 +13,12 @@
    Source for common names, keyboard combinations, common passwords is https://github.com/danielmiessler/SecLists (branch: master).
  */
 
-#include <iostream>
-#include <iterator>
-#include <fstream>
-#include <vector>
-#include <string>
-#include <regex>
+#include <iostream> // cin
+#include <iterator> // distance(), sregex_iterator()
+#include <fstream>  // ifstream, is_open(), eof(), getline(), close()
+#include <vector>   // vector<>, empty(), push_back()
+#include <string>   // string, size(), find(), npos
+#include <regex>    // regex
 
 #define TEST    0      // To run the test list I made, Make this 1
 #define DEBUG   0     // To output debug information, Make this 1
