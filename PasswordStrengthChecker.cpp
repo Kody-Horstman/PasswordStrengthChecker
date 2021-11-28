@@ -23,10 +23,14 @@
 #define TEST    0      // To run the test list I made, Make this 1
 #define DEBUG   0     // To output debug information, Make this 1
 
-#define MIN_LEN 16      // Minimum password length
-#define UC_PAT "[A-Z]"  // Pattern for uppercase characters
-#define LC_PAT "[a-z]"  // Pattern for lowercase characters
-#define DC_PAT "[0-9]"  // Pattern for digit characters
+#define MIN_PWD_LEN     16      // Minimum password length
+#define MIN_UPPER       3       // Minimum number of uppercase characters
+#define MIN_LOWER       3       // Minimum number of lowercase characters
+#define MIN_DIGIT       2       // Minimum number of digit characters
+#define MIN_LINE_LEN    3       // Minimum length of lines being loaded from a file
+#define UC_PAT          "[A-Z]"  // Pattern for uppercase characters
+#define LC_PAT          "[a-z]"  // Pattern for lowercase characters
+#define DC_PAT          "[0-9]"  // Pattern for digit characters
 
 // Types
 enum class Strength { Weak, Strong };
@@ -49,14 +53,12 @@ int main() {
     const std::string BPW_FILE = "10000-common-passwords.txt"; // Previously breached passwords
 
     // Variable containers
-#if TEST
-    std::vector<std::string> testPwds;
-#endif
     std::vector<std::string> passwords;
     std::vector<std::string> commonPatterns;
-    
-    // Read passwords from password.txt
 #if TEST
+    std::vector<std::string> testPwds;
+
+    // Read passwords from password.txt
     loadContentsInto(TST_FILE, testPwds);
 #endif
     loadContentsInto(PWD_FILE, passwords);
@@ -93,11 +95,11 @@ void loadContentsInto(const std::string& FILENAME, std::vector<std::string>& vec
 
     // Check if file is open
     if (infile.is_open()) {
-        // Read and store all lines with more than 4 characters
+        // Read and store all lines longer than some amount
         while (!infile.eof()) {
             std::getline(infile, line);
 
-            if (line.size() >= 3) vect.push_back(line);
+            if (line.size() >= MIN_LINE_LEN) vect.push_back(line);
         }
         infile.close();
     }
@@ -108,10 +110,10 @@ void loadContentsInto(const std::string& FILENAME, std::vector<std::string>& vec
 }
 
 // meetsLengthRequirements
-// Returns true if pwd parameter is greater than or equal to MIN_LEN characters in length.
+// Returns true if pwd parameter is greater than or equal to minimum characters in length.
 //  @param pwd
 bool meetsLengthRequirements(const std::string& pwd) {
-    if (pwd.size() >= MIN_LEN) return true;
+    if (pwd.size() >= MIN_PWD_LEN) return true;
 
 #if DEBUG
     std::cout << "\tDoes not meet length requirement." << '\n';
@@ -145,14 +147,14 @@ bool meetsCharacterRequirements(const std::string& pwd) {
     digitsCount = std::distance(digitsBegin, digitsEnd);
 
 #if DEBUG
-    if (upperCount < 3) std::cout << "\tNot enough uppercase letters." << '\n';
-    if (lowerCount < 3) std::cout << "\tNot enough lowercase letters." << '\n';
-    if (digitsCount < 2) std::cout << "\tNot enough digits." << '\n';
+    if (upperCount < MIN_UPPER) std::cout << "\tNot enough uppercase letters." << '\n';
+    if (lowerCount < MIN_LOWER) std::cout << "\tNot enough lowercase letters." << '\n';
+    if (digitsCount < MIN_DIGIT) std::cout << "\tNot enough digits." << '\n';
 #endif
 
-    if (upperCount >= 3
-        && lowerCount >= 3
-        && digitsCount >= 2
+    if (upperCount >= MIN_UPPER
+        && lowerCount >= MIN_LOWER
+        && digitsCount >= MIN_DIGIT
        )
         return true;
     return false;
