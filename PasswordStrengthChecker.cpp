@@ -58,7 +58,7 @@ int main() {
 #if TEST
     std::vector<std::string> testPwds;
 
-    // Read passwords from password.txt
+    // Read passwords contents from files
     loadContentsInto(TST_FILE, testPwds);
 #endif
     loadContentsInto(PWD_FILE, passwords);
@@ -87,7 +87,7 @@ void loadContentsInto(const std::string& FILENAME, std::vector<std::string>& vec
     std::string line;
 
 #if DEBUG
-    std::cout << "Loading " << FILENAME << "..." << '\n';
+    std::cout << "Loading " << FILENAME << "... ";
 #endif
 
     // Create infile stream
@@ -105,7 +105,7 @@ void loadContentsInto(const std::string& FILENAME, std::vector<std::string>& vec
     }
 
 #if DEBUG
-    std::cout << "Successfully loaded." << '\n' << '\n';
+    std::cout << "Success" << '\n' << '\n';
 #endif
 }
 
