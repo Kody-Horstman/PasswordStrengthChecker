@@ -66,13 +66,13 @@ int main() {
 
     // Classify
 #if TEST && DEBUG
-    std::cout << "Test passwords:" << std::endl;
+    std::cout << "Test passwords:" << '\n';
 #endif
 #if TEST
     classify(testPwds, commonPatterns);
 #endif
 #if DEBUG
-    std::cout << "Passwords:" << std::endl;
+    std::cout << "Passwords:" << '\n';
 #endif
     classify(passwords, commonPatterns);
 }
@@ -85,7 +85,7 @@ void loadContentsInto(const std::string& FILENAME, std::vector<std::string>& vec
     std::string line;
 
 #if DEBUG
-    std::cout << "Loading " << FILENAME << "..." << std::endl;
+    std::cout << "Loading " << FILENAME << "..." << '\n';
 #endif
 
     // Create infile stream
@@ -103,7 +103,7 @@ void loadContentsInto(const std::string& FILENAME, std::vector<std::string>& vec
     }
 
 #if DEBUG
-    std::cout << "Successfully loaded." << std::endl << std::endl;
+    std::cout << "Successfully loaded." << '\n' << '\n';
 #endif
 }
 
@@ -114,7 +114,7 @@ bool meetsLengthRequirements(const std::string& pwd) {
     if (pwd.size() >= MIN_LEN) return true;
 
 #if DEBUG
-    std::cout << "\tDoes not meet length requirement." << std::endl;
+    std::cout << "\tDoes not meet length requirement." << '\n';
 #endif
 
     return false;
@@ -145,9 +145,9 @@ bool meetsCharacterRequirements(const std::string& pwd) {
     digitsCount = std::distance(digitsBegin, digitsEnd);
 
 #if DEBUG
-    if (upperCount < 3) std::cout << "\tNot enough uppercase letters." << std::endl;
-    if (lowerCount < 3) std::cout << "\tNot enough lowercase letters." << std::endl;
-    if (digitsCount < 2) std::cout << "\tNot enough digits." << std::endl;
+    if (upperCount < 3) std::cout << "\tNot enough uppercase letters." << '\n';
+    if (lowerCount < 3) std::cout << "\tNot enough lowercase letters." << '\n';
+    if (digitsCount < 2) std::cout << "\tNot enough digits." << '\n';
 #endif
 
     if (upperCount >= 3
@@ -170,7 +170,7 @@ bool isFreeOf(const std::string& pwd, const std::vector<std::string>& patterns) 
             // Return false if pat appears in pwd
             if (pwd.find(pat) != std::string::npos) {
 #if DEBUG
-                std::cout << "\tContains common pattern: " << pat << std::endl;
+                std::cout << "\tContains common pattern: " << pat << '\n';
 #endif
                 return false;
             }
@@ -190,7 +190,7 @@ void classify(const std::vector<std::string> &vectPwds, const std::vector<std::s
     // for each test password
     for (const auto& pwd : vectPwds) {
 #if DEBUG
-        std::cout << pwd << std::endl;
+        std::cout << pwd << '\n';
 #endif
         // check requirements
         if (meetsLengthRequirements(pwd)        // Length
@@ -201,11 +201,11 @@ void classify(const std::vector<std::string> &vectPwds, const std::vector<std::s
         else strengthClass = Strength::Weak;
 
         // output classification
-        std::cout << (strengthClass == Strength::Strong ? "Strong" : "Weak") << std::endl;
+        std::cout << (strengthClass == Strength::Strong ? "Strong" : "Weak") << '\n';
 #if DEBUG
-        std::cout << std::endl;
+        std::cout << '\n';
 #endif
     }
 
-    std::cout << std::endl;
+    std::cout << '\n';
 }
